@@ -248,6 +248,10 @@ def export_excel():
     return send_file(file_name, as_attachment=True)
 
 
+@app.route("/sinergi5302")
+def sinergi5302():
+    return render_template("sinergi5302.html")
+
 # =========================
 # LOGOUT
 # =========================
