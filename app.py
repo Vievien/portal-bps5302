@@ -151,8 +151,12 @@ def hapus(id):
 # =========================
 @app.route('/admin')
 def admin():
+
     if 'username' not in session:
         return redirect('/')
+
+    if session.get('role') != 'admin':
+        return "Akses ditolak", 403
 
     return render_template(
         'admin.html',
@@ -250,6 +254,10 @@ def export_excel():
 
 @app.route("/sinergi5302")
 def sinergi5302():
+
+    if 'username' not in session:
+        return redirect('/')
+
     return render_template("sinergi5302.html")
 
 # =========================
