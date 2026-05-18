@@ -34,6 +34,15 @@ class Link(db.Model):
     judul = db.Column(db.String(200))
     link = db.Column(db.String(500))
 
+# =========================
+# MODEL R SHINY
+# =========================
+class RShiny(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    method = db.Column(db.String(200))
+    webapp = db.Column(db.String(500))
+    journal = db.Column(db.String(500))
+    keterangan = db.Column(db.String(500))
 
 # =========================
 # LOGIN
@@ -317,6 +326,93 @@ def pss_lke():
         return redirect('/')
 
     return render_template("pss_lke.html")
+
+
+# =========================
+# DASHBOARD R SHINY
+# =========================
+@app.route('/rshiny')
+def rshiny():
+
+    if 'username' not in session:
+        return redirect('/')
+
+    data = RShiny.query.all()
+
+    return render_template(
+        'rshiny.html',
+        data_rshiny=data,
+        username=session['username'],
+        role=session['role']
+    )
+
+# =========================
+# TAMBAH R SHINY
+# =========================
+@app.route('/tambah_rshiny', methods=['GET', 'POST'])
+def tambah_rshiny():
+
+    if 'username' not in session:
+        return redirect('/')
+
+    if request.method == 'POST':
+
+        data = RShiny(
+            method=request.form['method'],
+            webapp=request.form['webapp'],
+            journal=request.form['journal'],
+            keterangan=request.form['keterangan']
+        )
+
+        db.session.add(data)
+        db.session.commit()
+
+        return redirect('/dashboard')
+
+    return render_template('tambah_rshiny.html')
+
+
+# =========================
+# EDIT R SHINY
+# =========================
+@app.route('/edit_rshiny/<int:id>', methods=['GET', 'POST'])
+def edit_rshiny(id):
+
+    if 'username' not in session:
+        return redirect('/')
+
+    data = RShiny.query.get_or_404(id)
+
+    if request.method == 'POST':
+
+        data.method = request.form['method']
+        data.webapp = request.form['webapp']
+        data.journal = request.form['journal']
+        data.keterangan = request.form['keterangan']
+
+        db.session.commit()
+
+        return redirect('/dashboard')
+
+    return render_template('edit_rshiny.html', data=data)
+
+# =========================
+# HAPUS R SHINY
+# =========================
+@app.route('/hapus_rshiny/<int:id>')
+def hapus_rshiny(id):
+
+    if session.get('role') != 'admin':
+        return redirect('/')
+
+    data = RShiny.query.get_or_404(id)
+
+    db.session.delete(data)
+    db.session.commit()
+
+    return redirect('/rshiny')
+
+
 
 # =========================
 # LOGOUT
