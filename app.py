@@ -261,6 +261,64 @@ def sinergi5302():
     return render_template("sinergi5302.html")
 
 # =========================
+# MONITORING CAPKIN 2026
+# =========================
+@app.route("/monitoring_capkin_2026")
+def monitoring_capkin_2026():
+
+    if 'username' not in session:
+        return redirect('/')
+
+    return render_template("monitoring_capkin_2026.html")
+
+
+# =========================
+# MONITORING CAPKIN 2025
+# =========================
+@app.route("/monitoring_capkin_2025")
+def monitoring_capkin_2025():
+
+    if 'username' not in session:
+        return redirect('/')
+
+    return render_template("monitoring_capkin_2025.html")
+
+# =========================
+# PSS - PENJELASAN INDIKATOR
+# =========================
+@app.route("/pss_indikator")
+def pss_indikator():
+
+    if 'username' not in session:
+        return redirect('/')
+
+    return render_template("pss_indikator.html")
+
+
+# =========================
+# PSS - IDENTIFIKASI KEGIATAN
+# =========================
+@app.route("/pss_identifikasi")
+def pss_identifikasi():
+
+    if 'username' not in session:
+        return redirect('/')
+
+    return render_template("pss_identifikasi.html")
+
+
+# =========================
+# PSS - LKE EPSS
+# =========================
+@app.route("/pss_lke")
+def pss_lke():
+
+    if 'username' not in session:
+        return redirect('/')
+
+    return render_template("pss_lke.html")
+
+# =========================
 # LOGOUT
 # =========================
 @app.route('/logout')
