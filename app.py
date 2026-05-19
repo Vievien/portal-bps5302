@@ -9,7 +9,9 @@ app = Flask(__name__)
 app.secret_key = 'bps_sumba_timur_2026_super_secure'
 
 # DATABASE (SQLite)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
+import os
+
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
