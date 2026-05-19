@@ -155,7 +155,16 @@
 
             </a>
             
-            
+{% if session['role'] in ['user', 'admin'] %}
+
+<a href="/tim"
+   class="btn btn-outline-light w-100 mb-2">
+
+   TIM
+
+</a>
+
+{% endif %}     
 
             <a href="/logout"
                class="btn btn-danger w-100">

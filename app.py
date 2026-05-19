@@ -412,7 +412,172 @@ def hapus_rshiny(id):
 
     return redirect('/rshiny')
 
+# =========================
+# KATEGORI TIM
+# =========================
+class KategoriTim(db.Model):
 
+    id = db.Column(db.Integer, primary_key=True)
+
+    nama_tim = db.Column(
+        db.String(200),
+        nullable=False
+    )
+
+
+# =========================
+# MENU TIM
+# =========================
+class MenuTim(db.Model):
+
+    id = db.Column(db.Integer, primary_key=True)
+
+    kategori = db.Column(db.String(100))
+    judul = db.Column(db.String(200))
+    link = db.Column(db.String(1000))
+
+    tipe = db.Column(db.String(50))
+
+# =========================
+# DETAIL MENU TIM
+# =========================
+@app.route('/menu_tim/<int:id>')
+def menu_tim(id):
+
+    if 'username' not in session:
+        return redirect('/')
+
+    data = MenuTim.query.get_or_404(id)
+
+    return render_template(
+        'menu_tim_detail.html',
+        data=data
+    )
+
+
+
+# =========================
+# TAMBAH MENU TIM
+# =========================
+@app.route('/tambah_menu_tim', methods=['GET', 'POST'])
+def tambah_menu_tim():
+
+    if 'username' not in session:
+        return redirect('/')
+
+    if request.method == 'POST':
+
+        nama_tim = request.form['kategori']
+
+        cek = KategoriTim.query.filter_by(
+            nama_tim=nama_tim
+        ).first()
+
+        if not cek:
+
+            tim_baru = KategoriTim(
+                nama_tim=nama_tim
+            )
+
+            db.session.add(tim_baru)
+            db.session.commit()
+
+        data = MenuTim(
+            kategori=nama_tim,
+            judul=request.form['judul'],
+            link=request.form['link'],
+            tipe=request.form['tipe']
+        )
+
+        db.session.add(data)
+        db.session.commit()
+
+        return redirect('/tim')
+
+    return render_template('tambah_menu_tim.html')
+
+# =========================
+# HALAMAN TIM
+# =========================
+@app.route('/tim')
+def tim():
+
+    if 'username' not in session:
+        return redirect('/')
+
+    cari = request.args.get('cari')
+
+    query = KategoriTim.query
+
+    if cari:
+        query = query.filter(
+            KategoriTim.nama_tim.contains(cari)
+        )
+
+    data_tim = query.all()
+
+    return render_template(
+        'tim.html',
+        data_tim=data_tim
+    )
+
+# =========================
+# DETAIL TIM
+# =========================
+@app.route('/tim/<int:id>')
+def detail_tim(id):
+
+    if 'username' not in session:
+        return redirect('/')
+
+    kategori = KategoriTim.query.get_or_404(id)
+
+    data_menu = MenuTim.query.filter_by(
+        kategori=kategori.nama_tim
+    ).all()
+
+    return render_template(
+        'detail_tim.html',
+        kategori=kategori,
+        data_menu=data_menu
+    )
+
+# =========================
+# HAPUS TIM
+# =========================
+@app.route('/hapus_tim/<int:id>')
+def hapus_tim(id):
+
+    if session.get('role') != 'admin':
+        return redirect('/')
+
+    kategori = KategoriTim.query.get_or_404(id)
+
+    MenuTim.query.filter_by(
+        kategori=kategori.nama_tim
+    ).delete()
+
+    db.session.delete(kategori)
+
+    db.session.commit()
+
+    return redirect('/tim')
+
+# =========================
+# HAPUS MENU TIM
+# =========================
+@app.route('/hapus_menu_tim/<int:id>')
+def hapus_menu_tim(id):
+
+    if session.get('role') != 'admin':
+        return redirect('/')
+
+    data = MenuTim.query.get_or_404(id)
+
+    db.session.delete(data)
+    db.session.commit()
+
+    return redirect('/tim')
 
 # =========================
 # LOGOUT
