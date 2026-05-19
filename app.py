@@ -119,7 +119,7 @@ def tambah():
         db.session.add(data)
         db.session.commit()
 
-        return redirect('/dashboard')
+        return redirect('/rshiny')
 
     return render_template('tambah.html')
 
@@ -137,7 +137,7 @@ def edit(id):
         data.link = request.form['link']
 
         db.session.commit()
-        return redirect('/dashboard')
+        return redirect('/rshiny')
 
     return render_template('edit.html', data=data)
 
@@ -367,7 +367,7 @@ def tambah_rshiny():
         db.session.add(data)
         db.session.commit()
 
-        return redirect('/dashboard')
+        return redirect('/rshiny')
 
     return render_template('tambah_rshiny.html')
 
@@ -392,7 +392,7 @@ def edit_rshiny(id):
 
         db.session.commit()
 
-        return redirect('/dashboard')
+        return redirect('/rshiny')
 
     return render_template('edit_rshiny.html', data=data)
 
